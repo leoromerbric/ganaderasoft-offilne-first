@@ -64,6 +64,22 @@ class Finca extends Model
     }
 
     /**
+     * Get the rebanos for the finca.
+     */
+    public function rebanos()
+    {
+        return $this->hasMany(Rebano::class, 'id_Finca', 'id_Finca');
+    }
+
+    /**
+     * Get all animals through rebanos.
+     */
+    public function animales()
+    {
+        return $this->hasManyThrough(Animal::class, Rebano::class, 'id_Finca', 'id_Rebano', 'id_Finca', 'id_Rebano');
+    }
+
+    /**
      * Get the personal for the finca.
      */
     public function personalFinca()
