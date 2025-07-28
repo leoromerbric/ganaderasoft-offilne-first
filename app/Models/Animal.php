@@ -85,6 +85,25 @@ class Animal extends Model
     }
 
     /**
+     * Get the estado records for the animal.
+     */
+    public function estados()
+    {
+        return $this->hasMany(EstadoAnimal::class, 'esan_fk_id_animal', 'id_Animal');
+    }
+
+    /**
+     * Get the current active estado for the animal.
+     */
+    public function estadoActual()
+    {
+        return $this->hasOne(EstadoAnimal::class, 'esan_fk_id_animal', 'id_Animal')
+            ->whereNull('esan_fecha_fin')
+            ->orWhere('esan_fecha_fin', '>', now()->toDateString())
+            ->latest('esan_fecha_ini');
+    }
+
+    /**
      * Scope a query to only include active animals.
      */
     public function scopeActive($query)

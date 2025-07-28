@@ -131,7 +131,9 @@ class AnimalController extends Controller
             'pesosCorporales',
             'registrosCelo',
             'reproducciones',
-            'servicios'
+            'servicios',
+            'estados.estadoSalud',
+            'estadoActual.estadoSalud'
         ])->find($id);
 
         if (!$animal) {

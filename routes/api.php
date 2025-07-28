@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\RebanoController;
 use App\Http\Controllers\Api\AnimalController;
 use App\Http\Controllers\Api\InventarioBufaloController;
 use App\Http\Controllers\Api\TipoAnimalController;
+use App\Http\Controllers\Api\EstadoSaludController;
+use App\Http\Controllers\Api\EstadoAnimalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('animales', AnimalController::class);
     Route::apiResource('inventarios-bufalo', InventarioBufaloController::class);
     Route::apiResource('tipos-animal', TipoAnimalController::class);
+    Route::apiResource('estados-salud', EstadoSaludController::class);
+    Route::apiResource('estados-animal', EstadoAnimalController::class);
 });
