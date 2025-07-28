@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type_user',
+        'image',
     ];
 
     /**
@@ -42,4 +44,36 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the propietario associated with the user.
+     */
+    public function propietario()
+    {
+        return $this->hasOne(Propietario::class, 'id', 'id');
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->type_user === 'admin';
+    }
+
+    /**
+     * Check if the user is a propietario.
+     */
+    public function isPropietario(): bool
+    {
+        return $this->type_user === 'propietario';
+    }
+
+    /**
+     * Check if the user is a tecnico.
+     */
+    public function isTecnico(): bool
+    {
+        return $this->type_user === 'tecnico';
+    }
 }
