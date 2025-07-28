@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     container_name: ganaderasoft-api
     restart: unless-stopped
-    ports:
-      - "8000:80"
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
@@ -23,6 +21,20 @@ services:
       - DB_DATABASE=ganaderasoft
       - DB_USERNAME=root
       - DB_PASSWORD=password
+
+  nginx:
+    image: nginx:alpine
+    container_name: ganaderasoft-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - ganaderasoft
+    depends_on:
+      - app
 
   db:
     image: mysql:8.0
