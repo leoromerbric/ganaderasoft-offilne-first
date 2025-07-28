@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ganaderasoft-api
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    networks:
+      - ganaderasoft
+    depends_on:
+      - db
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=db
+      - DB_DATABASE=ganaderasoft
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+
+  db:
+    image: mysql:8.0
+    container_name: ganaderasoft-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ganaderasoft
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./ganaderasoft-28-5-25\ -\ corregido.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ganaderasoft
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ganaderasoft-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: password
+    networks:
+      - ganaderasoft
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+
+networks:
+  ganaderasoft:
+    driver: bridge
