@@ -1,0 +1,461 @@
+{
+	"info": {
+		"_postman_id": "c6e8a2b7-d2a8-4c3d-b5e7-8f9a1c2d3e4f",
+		"name": "GanaderaSoft API",
+		"description": "API Gateway for GanaderaSoft - Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, and fincas (farms) in the GanaderaSoft system.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own fincas\n- `tecnico`: Limited access for technical support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.token) {",
+									"        pm.environment.set('auth_token', response.data.token);",
+									"        console.log('Token saved:', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"type_user\": \"propietario\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user in the system.\n\n**Required Fields:**\n- `name`: User's full name (string, max 255 chars)\n- `email`: Valid email address (unique)\n- `password`: Password (min 8 chars)\n- `password_confirmation`: Must match password\n- `type_user`: One of ['admin', 'propietario', 'tecnico']\n\n**Response:**\n- Success (201): User object with authentication token\n- Error (422): Validation errors"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.token) {",
+									"        pm.environment.set('auth_token', response.data.token);",
+									"        console.log('Token saved:', response.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate a user and receive an access token.\n\n**Required Fields:**\n- `email`: User's email address\n- `password`: User's password\n\n**Response:**\n- Success (200): User object with authentication token\n- Error (401): Invalid credentials\n- Error (422): Validation errors\n\n**Note:** The password is validated using Laravel's Hash facade with secure bcrypt hashing."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						},
+						"description": "Get the authenticated user's profile information.\n\n**Authentication:** Bearer token required\n\n**Response:**\n- Success (200): Complete user profile including relationships\n- Error (401): Unauthenticated"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						},
+						"description": "Get the currently authenticated user's basic information.\n\n**Authentication:** Bearer token required\n\n**Response:**\n- Success (200): Basic user object\n- Error (401): Unauthenticated"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout the current user and revoke their access token.\n\n**Authentication:** Bearer token required\n\n**Response:**\n- Success (200): Logout confirmation\n- Error (401): Unauthenticated"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints for user registration, login, profile management, and logout."
+		},
+		{
+			"name": "Fincas (Farms)",
+			"item": [
+				{
+					"name": "List Fincas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fincas?page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fincas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination"
+								}
+							]
+						},
+						"description": "Get a paginated list of fincas (farms).\n\n**Authentication:** Bearer token required\n\n**Access Control:**\n- `admin`: Can see all fincas\n- `propietario`: Can only see their own fincas\n- `tecnico`: Limited access\n\n**Query Parameters:**\n- `page`: Page number for pagination (default: 1)\n\n**Response:**\n- Success (200): Paginated list of fincas with propietario details\n- Error (401): Unauthenticated\n- Error (403): Insufficient permissions"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Finca",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Nombre\": \"Finca La Esperanza\",\n    \"Explotacion_Tipo\": \"Bovinos\",\n    \"id_Propietario\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/fincas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fincas"
+							]
+						},
+						"description": "Create a new finca (farm).\n\n**Authentication:** Bearer token required\n\n**Required Fields:**\n- `Nombre`: Farm name (string, max 25 chars)\n- `Explotacion_Tipo`: Type of exploitation (string, max 20 chars)\n- `id_Propietario`: ID of the owner (must exist in propietario table)\n\n**Access Control:**\n- `admin`: Can create fincas for any propietario\n- `propietario`: Can only create fincas for themselves\n\n**Response:**\n- Success (201): Created finca with propietario details\n- Error (401): Unauthenticated\n- Error (403): Insufficient permissions\n- Error (422): Validation errors"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Finca Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fincas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fincas",
+								"1"
+							]
+						},
+						"description": "Get details of a specific finca by ID.\n\n**Authentication:** Bearer token required\n\n**Path Parameters:**\n- `id`: Finca ID\n\n**Access Control:**\n- `admin`: Can view any finca\n- `propietario`: Can only view their own fincas\n\n**Response:**\n- Success (200): Finca details with propietario information\n- Error (401): Unauthenticated\n- Error (403): Insufficient permissions\n- Error (404): Finca not found"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Finca",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Nombre\": \"Finca La Nueva Esperanza\",\n    \"Explotacion_Tipo\": \"Bovinos y Porcinos\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/fincas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fincas",
+								"1"
+							]
+						},
+						"description": "Update an existing finca.\n\n**Authentication:** Bearer token required\n\n**Path Parameters:**\n- `id`: Finca ID\n\n**Optional Fields:**\n- `Nombre`: Farm name (string, max 25 chars)\n- `Explotacion_Tipo`: Type of exploitation (string, max 20 chars)\n- `id_Propietario`: Owner ID (admin only)\n\n**Access Control:**\n- `admin`: Can update any finca including ownership\n- `propietario`: Can only update their own fincas (cannot change ownership)\n\n**Response:**\n- Success (200): Updated finca with propietario details\n- Error (401): Unauthenticated\n- Error (403): Insufficient permissions\n- Error (404): Finca not found\n- Error (422): Validation errors"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Finca",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fincas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"fincas",
+								"1"
+							]
+						},
+						"description": "Delete a finca (soft delete by setting archivado = true).\n\n**Authentication:** Bearer token required\n\n**Path Parameters:**\n- `id`: Finca ID\n\n**Access Control:**\n- `admin`: Can delete any finca\n- `propietario`: Can only delete their own fincas\n\n**Note:** This is a soft delete operation. The finca is marked as archived but not physically removed.\n\n**Response:**\n- Success (200): Deletion confirmation\n- Error (401): Unauthenticated\n- Error (403): Insufficient permissions\n- Error (404): Finca not found"
+					},
+					"response": []
+				}
+			],
+			"description": "CRUD operations for managing fincas (farms) in the system."
+		},
+		{
+			"name": "System Health",
+			"item": [
+				{
+					"name": "API Health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						},
+						"description": "Check if the API is running and accessible.\n\n**Authentication:** Not required\n\n**Response:**\n- Success (200): API status and version information"
+					},
+					"response": []
+				},
+				{
+					"name": "Database Connection Test",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/test/database",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"database"
+							]
+						},
+						"description": "Test database connectivity.\n\n**Authentication:** Not required\n\n**Response:**\n- Success (200): Database connection successful\n- Error (500): Database connection failed"
+					},
+					"response": []
+				}
+			],
+			"description": "System health and diagnostic endpoints."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
