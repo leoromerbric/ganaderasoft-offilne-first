@@ -185,12 +185,76 @@ curl -X GET ${BASE_URL}/animales/1 \
     "pesosCorporales": [],
     "registrosCelo": [],
     "reproducciones": [],
-    "servicios": []
+    "servicios": [],
+    "estados": [
+      {
+        "esan_id": 1,
+        "esan_fecha_ini": "2024-01-15",
+        "esan_fecha_fin": "2024-01-25",
+        "estadoSalud": {
+          "estado_id": 1,
+          "estado_nombre": "Enfermo"
+        }
+      }
+    ],
+    "estadoActual": {
+      "esan_id": 2,
+      "esan_fecha_ini": "2024-01-26",
+      "esan_fecha_fin": null,
+      "estadoSalud": {
+        "estado_id": 2,
+        "estado_nombre": "Sano"
+      }
+    }
   }
 }
 ```
 
-## 4. Gestión de Tipos de Animal (Solo Admin)
+## 4. Gestión de Salud Animal
+
+### Crear Estado de Salud (Solo Admin)
+```bash
+# Requiere token de admin
+ADMIN_TOKEN="1|admin_token_aquí"
+
+curl -X POST ${BASE_URL}/estados-salud \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer ${ADMIN_TOKEN}" \
+  -d '{
+    "estado_nombre": "Enfermo"
+  }'
+```
+
+### Registrar Estado de Salud para un Animal
+```bash
+curl -X POST ${BASE_URL}/estados-animal \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -d '{
+    "esan_fecha_ini": "2024-01-15",
+    "esan_fecha_fin": "2024-01-25",
+    "esan_fk_estado_id": 1,
+    "esan_fk_id_animal": 1
+  }'
+```
+
+### Consultar Estados Activos de un Animal
+```bash
+curl -X GET "${BASE_URL}/estados-animal?animal_id=1&active=true" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer ${TOKEN}"
+```
+
+### Buscar Estados de Salud
+```bash
+curl -X GET "${BASE_URL}/estados-salud?search=enfermo" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer ${TOKEN}"
+```
+
+## 5. Gestión de Tipos de Animal (Solo Admin)
 
 ### Crear Tipo de Animal
 ```bash
@@ -213,7 +277,7 @@ curl -X GET "${BASE_URL}/tipos-animal?search=bovino" \
   -H "Authorization: Bearer ${TOKEN}"
 ```
 
-## 5. Operaciones de Actualización
+## 6. Operaciones de Actualización
 
 ### Actualizar Propietario
 ```bash
@@ -249,7 +313,7 @@ curl -X PUT ${BASE_URL}/animales/1 \
   }'
 ```
 
-## 6. Inicio de Sesión y Consultas
+## 7. Inicio de Sesión y Consultas
 
 ### Login
 ```bash
@@ -292,7 +356,7 @@ curl -X GET ${BASE_URL}/inventarios-bufalo \
   -H "Authorization: Bearer ${TOKEN}"
 ```
 
-## 7. Operaciones de Eliminación
+## 8. Operaciones de Eliminación
 
 ### Eliminar Animal (Soft Delete)
 ```bash
@@ -315,7 +379,7 @@ curl -X DELETE ${BASE_URL}/fincas/1 \
   -H "Authorization: Bearer ${TOKEN}"
 ```
 
-## 8. Manejo de Errores Comunes
+## 9. Manejo de Errores Comunes
 
 ### Error 401 - No Autorizado
 ```bash
@@ -366,7 +430,7 @@ curl -X POST ${BASE_URL}/animales \
 # }
 ```
 
-## 9. Testing de Seguridad de Passwords
+## 10. Testing de Seguridad de Passwords
 
 ### Verificar Hash de Passwords
 ```bash
@@ -398,7 +462,7 @@ curl -X POST ${BASE_URL}/auth/login \
   }'
 ```
 
-## 10. Paginación
+## 11. Paginación
 
 ### Navegar por Páginas
 ```bash

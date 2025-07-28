@@ -283,6 +283,69 @@ Actualiza un tipo de animal (solo admin).
 #### DELETE `/tipos-animal/{id}` 🔒
 Elimina un tipo de animal (solo admin).
 
+### 🏥 Estados de Salud
+
+#### GET `/estados-salud` 🔒
+Lista todos los estados de salud disponibles.
+
+**Parámetros de Query Opcionales:**
+- `search`: Buscar por nombre
+
+#### POST `/estados-salud` 🔒
+Crea un nuevo estado de salud (solo admin).
+
+**Campos Requeridos:**
+```json
+{
+    "estado_nombre": "string (máx. 40 caracteres, solo letras, números y espacios)"
+}
+```
+
+#### GET `/estados-salud/{id}` 🔒
+Obtiene detalles de un estado de salud específico con historial de uso.
+
+#### PUT `/estados-salud/{id}` 🔒
+Actualiza un estado de salud (solo admin).
+
+#### DELETE `/estados-salud/{id}` 🔒
+Elimina un estado de salud (solo admin, no permitido si está en uso).
+
+### 📋 Estados de Animal
+
+#### GET `/estados-animal` 🔒
+Lista los estados de salud de animales según los permisos del usuario.
+
+**Parámetros de Query Opcionales:**
+- `animal_id`: Filtrar por animal específico
+- `estado_id`: Filtrar por estado de salud
+- `active=true`: Solo estados activos (sin fecha fin)
+
+**Control de Acceso:**
+- `admin`: Ve todos los estados de animales
+- `propietario`: Ve solo estados de sus animales
+
+#### POST `/estados-animal` 🔒
+Registra un nuevo estado de salud para un animal.
+
+**Campos Requeridos:**
+```json
+{
+    "esan_fecha_ini": "date (YYYY-MM-DD)",
+    "esan_fecha_fin": "date (YYYY-MM-DD, opcional, debe ser >= fecha_ini)",
+    "esan_fk_estado_id": "integer (debe existir en estados_salud)",
+    "esan_fk_id_animal": "integer (debe existir)"
+}
+```
+
+#### GET `/estados-animal/{id}` 🔒
+Obtiene detalles completos de un estado de animal específico.
+
+#### PUT `/estados-animal/{id}` 🔒
+Actualiza un estado de animal existente.
+
+#### DELETE `/estados-animal/{id}` 🔒
+Elimina un registro de estado de animal.
+
 ## Colección de Postman
 
 En esta carpeta encontrarás:
