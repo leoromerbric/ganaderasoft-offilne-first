@@ -1,1033 +1,1906 @@
 {
-	"info": {
-		"_postman_id": "c6e8a2b7-d2a8-4c3d-b5e7-8f9a1c2d3e4f",
-		"name": "GanaderaSoft API - Complete",
-		"description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## New Endpoints Added\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12345678"
-	},
-	"item": [
-		{
-			"name": "🔐 Authentication",
-			"item": [
-				{
-					"name": "Register User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 201) {",
-									"    const response = pm.response.json();",
-									"    if (response.success && response.data.token) {",
-									"        pm.environment.set('auth_token', response.data.token);",
-									"        console.log('Token saved:', response.data.token);",
-									"    }",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Juan Pérez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"type_user\": \"propietario\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/auth/register",
-							"host": ["{{base_url}}"],
-							"path": ["api", "auth", "register"]
-						}
-					}
-				},
-				{
-					"name": "Login User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    const response = pm.response.json();",
-									"    if (response.success && response.data.token) {",
-									"        pm.environment.set('auth_token', response.data.token);",
-									"        console.log('Token saved:', response.data.token);",
-									"    }",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/auth/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "auth", "login"]
-						}
-					}
-				},
-				{
-					"name": "Get Profile",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/profile",
-							"host": ["{{base_url}}"],
-							"path": ["api", "profile"]
-						}
-					}
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/auth/logout",
-							"host": ["{{base_url}}"],
-							"path": ["api", "auth", "logout"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "👨‍💼 Propietarios",
-			"item": [
-				{
-					"name": "List Propietarios",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/propietarios",
-							"host": ["{{base_url}}"],
-							"path": ["api", "propietarios"]
-						}
-					}
-				},
-				{
-					"name": "Create Propietario",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": 1,\n    \"Nombre\": \"Juan\",\n    \"Apellido\": \"Pérez\",\n    \"Telefono\": \"+57 300 123 4567\",\n    \"id_Personal\": null\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/propietarios",
-							"host": ["{{base_url}}"],
-							"path": ["api", "propietarios"]
-						}
-					}
-				},
-				{
-					"name": "Get Propietario",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/propietarios/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "propietarios", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Propietario",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Telefono\": \"+57 300 999 8888\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/propietarios/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "propietarios", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Propietario (Admin only)",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/propietarios/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "propietarios", "1"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "🏡 Fincas",
-			"item": [
-				{
-					"name": "List Fincas",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/fincas",
-							"host": ["{{base_url}}"],
-							"path": ["api", "fincas"]
-						}
-					}
-				},
-				{
-					"name": "Create Finca",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Nombre\": \"Finca La Esperanza\",\n    \"Explotacion_Tipo\": \"Bovinos\",\n    \"id_Propietario\": 1\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/fincas",
-							"host": ["{{base_url}}"],
-							"path": ["api", "fincas"]
-						}
-					}
-				},
-				{
-					"name": "Get Finca",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/fincas/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "fincas", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Finca",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Nombre\": \"Finca La Nueva Esperanza\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/fincas/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "fincas", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Finca",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/fincas/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "fincas", "1"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "🐄 Rebaños",
-			"item": [
-				{
-					"name": "List Rebaños",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/rebanos",
-							"host": ["{{base_url}}"],
-							"path": ["api", "rebanos"]
-						}
-					}
-				},
-				{
-					"name": "Create Rebaño",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id_Finca\": 1,\n    \"Nombre\": \"Rebaño Principal\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/rebanos",
-							"host": ["{{base_url}}"],
-							"path": ["api", "rebanos"]
-						}
-					}
-				},
-				{
-					"name": "Get Rebaño",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/rebanos/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "rebanos", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Rebaño",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Nombre\": \"Rebaño Norte\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/rebanos/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "rebanos", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Rebaño",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/rebanos/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "rebanos", "1"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "🐂 Animales",
-			"item": [
-				{
-					"name": "List Animales",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/animales",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales"]
-						}
-					}
-				},
-				{
-					"name": "List Animales by Rebaño",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/animales?rebano_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales"],
-							"query": [
-								{
-									"key": "rebano_id",
-									"value": "1"
-								}
-							]
-						}
-					}
-				},
-				{
-					"name": "List Animales by Sex",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/animales?sexo=F",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales"],
-							"query": [
-								{
-									"key": "sexo",
-									"value": "F"
-								}
-							]
-						}
-					}
-				},
-				{
-					"name": "Create Animal",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id_Rebano\": 1,\n    \"Nombre\": \"Esperanza\",\n    \"codigo_animal\": \"ESP-001\",\n    \"Sexo\": \"F\",\n    \"fecha_nacimiento\": \"2022-03-15\",\n    \"Procedencia\": \"Finca San José\",\n    \"fk_composicion_raza\": 1\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/animales",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales"]
-						}
-					}
-				},
-				{
-					"name": "Get Animal (with relationships)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/animales/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Animal",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Nombre\": \"Nueva Esperanza\",\n    \"codigo_animal\": \"ESP-001-UPD\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/animales/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Animal",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/animales/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "animales", "1"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "🦌 Inventarios Búfalo",
-			"item": [
-				{
-					"name": "List Inventarios",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo"]
-						}
-					}
-				},
-				{
-					"name": "List Inventarios by Finca",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo?finca_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo"],
-							"query": [
-								{
-									"key": "finca_id",
-									"value": "1"
-								}
-							]
-						}
-					}
-				},
-				{
-					"name": "Create Inventario",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id_Finca\": 1,\n    \"Num_Becerro\": 15,\n    \"Num_Anojo\": 12,\n    \"Num_Bubilla\": 8,\n    \"Num_Bufalo\": 25,\n    \"Fecha_Inventario\": \"2024-01-15\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo"]
-						}
-					}
-				},
-				{
-					"name": "Get Inventario",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Inventario",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Num_Becerro\": 20,\n    \"Num_Bufalo\": 30\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Inventario",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/inventarios-bufalo/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "inventarios-bufalo", "1"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "🏷️ Tipos de Animal",
-			"item": [
-				{
-					"name": "List Tipos de Animal",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal"]
-						}
-					}
-				},
-				{
-					"name": "Search Tipos de Animal",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal?search=bovino",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal"],
-							"query": [
-								{
-									"key": "search",
-									"value": "bovino"
-								}
-							]
-						}
-					}
-				},
-				{
-					"name": "Create Tipo de Animal (Admin only)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"tipo_animal_nombre\": \"Bovino Criollo\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal"]
-						}
-					}
-				},
-				{
-					"name": "Get Tipo de Animal",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal", "1"]
-						}
-					}
-				},
-				{
-					"name": "Update Tipo de Animal (Admin only)",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"tipo_animal_nombre\": \"Bovino Criollo Mejorado\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal", "1"]
-						}
-					}
-				},
-				{
-					"name": "Delete Tipo de Animal (Admin only)",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/tipos-animal/1",
-							"host": ["{{base_url}}"],
-							"path": ["api", "tipos-animal", "1"]
-						}
-					}
-				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "base_url",
-			"value": "http://localhost:8000",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "c6e8a2b7-d2a8-4c3d-b5e7-8f9a1c2d3e4f",
+    "name": "GanaderaSoft API - Complete",
+    "description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## New Endpoints Added\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)\n\n## New Configuration APIs Added\n- Tipo Explotación\n- Método Riego\n- pH Suelo\n- Textura Suelo\n- Fuente de Agua\n- Sexo\n- Composición Raza\n- Etapas\n\n## Enhanced Features\n- Animal relationship management (estado_animal, etapa_animal)\n- Finca terreno data support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data.token) {",
+                  "        pm.environment.set('auth_token', response.data.token);",
+                  "        console.log('Token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Juan Pérez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"type_user\": \"propietario\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data.token) {",
+                  "        pm.environment.set('auth_token', response.data.token);",
+                  "        console.log('Token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👨‍💼 Propietarios",
+      "item": [
+        {
+          "name": "List Propietarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/propietarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "propietarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Propietario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 1,\n    \"Nombre\": \"Juan\",\n    \"Apellido\": \"Pérez\",\n    \"Telefono\": \"+57 300 123 4567\",\n    \"id_Personal\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/propietarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "propietarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Propietario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/propietarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "propietarios",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Propietario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Telefono\": \"+57 300 999 8888\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/propietarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "propietarios",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Propietario (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/propietarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "propietarios",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏡 Fincas",
+      "item": [
+        {
+          "name": "List Fincas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/fincas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "fincas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Finca",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Finca La Esperanza\",\n    \"Explotacion_Tipo\": \"Bovinos\",\n    \"id_Propietario\": 1,\n    \"terreno\": {\n        \"Superficie\": 10.5,\n        \"Relieve\": \"Plano\",\n        \"Suelo_Textura\": \"Franco\",\n        \"ph_Suelo\": \"6\",\n        \"Precipitacion\": 1200.0,\n        \"Velocidad_Viento\": 15.0,\n        \"Temp_Anual\": \"24\",\n        \"Temp_Min\": \"18\",\n        \"Temp_Max\": \"30\",\n        \"Radiacion\": 5.2,\n        \"Fuente_Agua\": \"Superficial\",\n        \"Caudal_Disponible\": 1000,\n        \"Riego_Metodo\": \"Aspersi\\u00f3n\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/fincas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "fincas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Finca",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/fincas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "fincas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Finca",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Finca La Nueva Esperanza\",\n    \"terreno\": {\n        \"Superficie\": 12.0,\n        \"Relieve\": \"Ondulado\",\n        \"Fuente_Agua\": \"Subterranea\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/fincas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "fincas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Finca",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/fincas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "fincas",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐄 Rebaños",
+      "item": [
+        {
+          "name": "List Rebaños",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rebanos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rebanos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Rebaño",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id_Finca\": 1,\n    \"Nombre\": \"Rebaño Principal\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rebanos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rebanos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Rebaño",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rebanos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rebanos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Rebaño",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Rebaño Norte\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rebanos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rebanos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Rebaño",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rebanos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rebanos",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐂 Animales",
+      "item": [
+        {
+          "name": "List Animales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/animales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Animales by Rebaño",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/animales?rebano_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales"
+              ],
+              "query": [
+                {
+                  "key": "rebano_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Animales by Sex",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/animales?sexo=F",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales"
+              ],
+              "query": [
+                {
+                  "key": "sexo",
+                  "value": "F"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Animal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id_Rebano\": 1,\n    \"Nombre\": \"Esperanza\",\n    \"codigo_animal\": \"ESP-001\",\n    \"Sexo\": \"F\",\n    \"fecha_nacimiento\": \"2022-03-15\",\n    \"Procedencia\": \"Finca San Jos\\u00e9\",\n    \"fk_composicion_raza\": 1,\n    \"estado_inicial\": {\n        \"estado_id\": 1,\n        \"fecha_ini\": \"2024-01-01\"\n    },\n    \"etapa_inicial\": {\n        \"etapa_id\": 1,\n        \"fecha_ini\": \"2024-01-01\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Animal (with relationships)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/animales/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Animal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Nueva Esperanza\",\n    \"codigo_animal\": \"ESP-001-UPD\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Animal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/animales/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🦌 Inventarios Búfalo",
+      "item": [
+        {
+          "name": "List Inventarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Inventarios by Finca",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo?finca_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo"
+              ],
+              "query": [
+                {
+                  "key": "finca_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Inventario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id_Finca\": 1,\n    \"Num_Becerro\": 15,\n    \"Num_Anojo\": 12,\n    \"Num_Bubilla\": 8,\n    \"Num_Bufalo\": 25,\n    \"Fecha_Inventario\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Inventario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Inventario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Num_Becerro\": 20,\n    \"Num_Bufalo\": 30\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Inventario",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/inventarios-bufalo/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "inventarios-bufalo",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Tipos de Animal",
+      "item": [
+        {
+          "name": "List Tipos de Animal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Tipos de Animal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal?search=bovino",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "bovino"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Tipo de Animal (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tipo_animal_nombre\": \"Bovino Criollo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Tipo de Animal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Tipo de Animal (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tipo_animal_nombre\": \"Bovino Criollo Mejorado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Tipo de Animal (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-animal/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tipos-animal",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 Configuración",
+      "item": [
+        {
+          "name": "Get Tipo Explotación",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/tipo-explotacion",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "tipo-explotacion"
+              ]
+            },
+            "description": "Obtiene la lista de tipos de explotación disponibles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Método Riego",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodo-riego",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodo-riego"
+              ]
+            },
+            "description": "Obtiene la lista de métodos de riego disponibles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get PH Suelo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/ph-suelo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "ph-suelo"
+              ]
+            },
+            "description": "Obtiene la lista de valores de pH del suelo"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Textura Suelo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/textura-suelo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "textura-suelo"
+              ]
+            },
+            "description": "Obtiene la lista de texturas de suelo disponibles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Fuente Agua",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/fuente-agua",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "fuente-agua"
+              ]
+            },
+            "description": "Obtiene la lista de fuentes de agua disponibles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sexo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/sexo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "sexo"
+              ]
+            },
+            "description": "Obtiene la lista de sexos disponibles"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧬 Composición Raza",
+      "item": [
+        {
+          "name": "List Composición Raza",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/composicion-raza",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "composicion-raza"
+              ],
+              "query": [
+                {
+                  "key": "finca_id",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "nombre",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Composición Raza",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Holstein\",\n    \"Siglas\": \"HOL\",\n    \"Pelaje\": \"Negro y blanco\",\n    \"Proposito\": \"Lechero\",\n    \"Tipo_Raza\": \"Pura\",\n    \"Origen\": \"Holanda\",\n    \"Caracteristica_Especial\": \"Alta producci\\u00f3n lechera\",\n    \"Proporcion_Raza\": \"100%\",\n    \"fk_id_Finca\": 1,\n    \"fk_tipo_animal_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/composicion-raza",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "composicion-raza"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Composición Raza",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/composicion-raza/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "composicion-raza",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Composición Raza",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Nombre\": \"Holstein Friesian\",\n    \"Caracteristica_Especial\": \"Muy alta producci\\u00f3n lechera\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/composicion-raza/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "composicion-raza",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Composición Raza",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/composicion-raza/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "composicion-raza",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📈 Etapas",
+      "item": [
+        {
+          "name": "List Etapas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/etapas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "etapas"
+              ],
+              "query": [
+                {
+                  "key": "tipo_animal_id",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "sexo",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Etapa (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"etapa_nombre\": \"Ternero\",\n    \"etapa_edad_ini\": 0,\n    \"etapa_edad_fin\": 6,\n    \"etapa_fk_tipo_animal_id\": 1,\n    \"etapa_sexo\": \"M\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/etapas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "etapas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Etapa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/etapas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "etapas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Etapa (Admin Only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"etapa_nombre\": \"Ternero Joven\",\n    \"etapa_edad_fin\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/etapas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "etapas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Etapa (Admin Only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/etapas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "etapas",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🐂 Animal Relationships",
+      "item": [
+        {
+          "name": "Create Estado Animal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"esan_fecha_ini\": \"2024-01-01\",\n    \"esan_fecha_fin\": null,\n    \"esan_fk_estado_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales/1/estado-animal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1",
+                "estado-animal"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Estado Animal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"esan_fecha_fin\": \"2024-01-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales/1/estado-animal/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1",
+                "estado-animal",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Etapa Animal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"etan_fecha_ini\": \"2024-01-01\",\n    \"etan_fecha_fin\": null,\n    \"etan_etapa_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales/1/etapa-animal",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1",
+                "etapa-animal"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Etapa Animal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"etan_fecha_fin\": \"2024-06-30\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/animales/1/etapa-animal/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "animales",
+                "1",
+                "etapa-animal",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 
 class ConfiguracionController extends Controller
 {
@@ -136,17 +135,17 @@ class ConfiguracionController extends Controller
     }
 
     /**
-     * Helper method to read JSON data from storage.
+     * Helper method to read JSON data from resources.
      */
     private function getJsonData($filename)
     {
-        $path = "datos-constantes/{$filename}";
+        $path = resource_path("datos-constantes/{$filename}");
         
-        if (!Storage::exists($path)) {
+        if (!file_exists($path)) {
             throw new \Exception("Archivo de configuración no encontrado: {$filename}");
         }
 
-        $content = Storage::get($path);
+        $content = file_get_contents($path);
         $data = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
