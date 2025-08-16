@@ -86,4 +86,12 @@ class Finca extends Model
     {
         return $this->hasMany(PersonalFinca::class, 'id_Finca', 'id_Finca');
     }
+
+    /**
+     * Get the terreno for the finca.
+     */
+    public function terreno()
+    {
+        return $this->hasOne(Terreno::class, 'id_Finca', 'id_Finca');
+    }
 }
