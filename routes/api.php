@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('textura-suelo', [ConfiguracionController::class, 'texturaSuelo']);
         Route::get('fuente-agua', [ConfiguracionController::class, 'fuenteAgua']);
         Route::get('sexo', [ConfiguracionController::class, 'sexo']);
+        Route::get('tipo-relieve', [ConfiguracionController::class, 'tipoRelieve']);
     });
     
     // Animal relationship management routes

@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "40334492-12d4-4543-9665-ec909d98a343",
 		"name": "GanaderaSoft API - Complete",
-		"description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## New Endpoints Added\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)\n\n## New Configuration APIs Added\n- Tipo Explotación\n- Método Riego\n- pH Suelo\n- Textura Suelo\n- Fuente de Agua\n- Sexo\n- Composición Raza\n- Etapas\n\n## Enhanced Features\n- Animal relationship management (estado_animal, etapa_animal)\n- Finca terreno data support",
+		"description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## New Endpoints Added\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)\n\n## New Configuration APIs Added\n- Tipo Explotación\n- Método Riego\n- pH Suelo\n- Textura Suelo\n- Fuente de Agua\n- Sexo\n- Tipo Relieve\n- Composición Raza\n- Etapas\n\n## Enhanced Features\n- Animal relationship management (estado_animal, etapa_animal)\n- Finca terreno data support\n- ComposicionRaza API now returns all records without filtering by fk_tipo_animal_id or fk_id_Finca",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "3234714"
 	},
@@ -1426,6 +1426,35 @@
 							]
 						},
 						"description": "Obtiene la lista de sexos disponibles"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tipo Relieve",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/configuracion/tipo-relieve",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"configuracion",
+								"tipo-relieve"
+							]
+						},
+						"description": "Obtiene la lista de tipos de relieve disponibles (Plano, Ondulado, Montañoso, Otro)"
 					},
 					"response": []
 				}

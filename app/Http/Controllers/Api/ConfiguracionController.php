@@ -135,6 +135,27 @@ class ConfiguracionController extends Controller
     }
 
     /**
+     * Get Tipo Relieve list.
+     */
+    public function tipoRelieve()
+    {
+        try {
+            $data = $this->getJsonData('tipo-relieve.json');
+            return response()->json([
+                'success' => true,
+                'message' => 'Lista de tipos de relieve obtenida exitosamente',
+                'data' => $data
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener la lista de tipos de relieve',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Helper method to read JSON data from resources.
      */
     private function getJsonData($filename)

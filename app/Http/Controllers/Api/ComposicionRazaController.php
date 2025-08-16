@@ -15,36 +15,11 @@ class ComposicionRazaController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
         $query = ComposicionRaza::with(['finca', 'tipoAnimal']);
 
-        // Apply permission filters
-        if (!$user->isAdmin()) {
-            $propietario = $user->propietario;
-            if (!$propietario) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuario no tiene propietario asociado'
-                ], Response::HTTP_FORBIDDEN);
-            }
-
-            // Filter by fincas owned by the propietario
-            $query->whereHas('finca', function ($q) use ($propietario) {
-                $q->where('id_Propietario', $propietario->id);
-            });
-        }
-
-        // Apply filters
-        if ($request->has('finca_id')) {
-            $query->forFinca($request->finca_id);
-        }
-
+        // Apply filters (removed fk_tipo_animal_id and fk_id_Finca filtering as requested)
         if ($request->has('nombre')) {
             $query->byName($request->nombre);
-        }
-
-        if ($request->has('tipo_animal_id')) {
-            $query->where('fk_tipo_animal_id', $request->tipo_animal_id);
         }
 
         $composicionRazas = $query->paginate(15);
