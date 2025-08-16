@@ -28,7 +28,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader || true
+RUN composer install --no-dev --optimize-autoloader
 
 # Generate application key
 RUN php artisan key:generate || echo "Key generation skipped - no artisan available yet"
