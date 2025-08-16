@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Finca;
 use App\Models\Propietario;
+use App\Models\Terreno;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class FincaController extends Controller
         
         // If user is admin, show all fincas
         if ($user->isAdmin()) {
-            $fincas = Finca::with(['propietario.user'])
+            $fincas = Finca::with(['propietario.user', 'terreno'])
                 ->active()
                 ->paginate(15);
         } else {
@@ -33,7 +34,7 @@ class FincaController extends Controller
                 ], Response::HTTP_FORBIDDEN);
             }
             
-            $fincas = Finca::with(['propietario.user'])
+            $fincas = Finca::with(['propietario.user', 'terreno'])
                 ->forPropietario($propietario->id)
                 ->active()
                 ->paginate(15);
@@ -54,7 +55,21 @@ class FincaController extends Controller
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required|string|max:25',
             'Explotacion_Tipo' => 'required|string|max:20',
-            'id_Propietario' => 'required|exists:propietario,id'
+            'id_Propietario' => 'required|exists:propietario,id',
+            'terreno' => 'nullable|array',
+            'terreno.Superficie' => 'nullable|numeric|min:0',
+            'terreno.Relieve' => 'nullable|string|max:9',
+            'terreno.Suelo_Textura' => 'nullable|string|max:25',
+            'terreno.ph_Suelo' => 'nullable|string|max:2',
+            'terreno.Precipitacion' => 'nullable|numeric|min:0',
+            'terreno.Velocidad_Viento' => 'nullable|numeric|min:0',
+            'terreno.Temp_Anual' => 'nullable|string|max:4',
+            'terreno.Temp_Min' => 'nullable|string|max:4',
+            'terreno.Temp_Max' => 'nullable|string|max:4',
+            'terreno.Radiacion' => 'nullable|numeric|min:0',
+            'terreno.Fuente_Agua' => 'nullable|string|max:25',
+            'terreno.Caudal_Disponible' => 'nullable|integer|min:0',
+            'terreno.Riego_Metodo' => 'nullable|string|max:18',
         ]);
 
         if ($validator->fails()) {
@@ -85,7 +100,14 @@ class FincaController extends Controller
             'archivado' => false
         ]);
 
-        $finca->load(['propietario.user']);
+        // Create terreno if provided
+        if ($request->has('terreno') && $request->terreno) {
+            $terrenoData = $request->terreno;
+            $terrenoData['id_Finca'] = $finca->id_Finca;
+            Terreno::create($terrenoData);
+        }
+
+        $finca->load(['propietario.user', 'terreno']);
 
         return response()->json([
             'success' => true,
@@ -99,7 +121,7 @@ class FincaController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $finca = Finca::with(['propietario.user'])->find($id);
+        $finca = Finca::with(['propietario.user', 'terreno'])->find($id);
 
         if (!$finca) {
             return response()->json([
@@ -145,7 +167,21 @@ class FincaController extends Controller
         $validator = Validator::make($request->all(), [
             'Nombre' => 'sometimes|string|max:25',
             'Explotacion_Tipo' => 'sometimes|string|max:20',
-            'id_Propietario' => 'sometimes|exists:propietario,id'
+            'id_Propietario' => 'sometimes|exists:propietario,id',
+            'terreno' => 'nullable|array',
+            'terreno.Superficie' => 'nullable|numeric|min:0',
+            'terreno.Relieve' => 'nullable|string|max:9',
+            'terreno.Suelo_Textura' => 'nullable|string|max:25',
+            'terreno.ph_Suelo' => 'nullable|string|max:2',
+            'terreno.Precipitacion' => 'nullable|numeric|min:0',
+            'terreno.Velocidad_Viento' => 'nullable|numeric|min:0',
+            'terreno.Temp_Anual' => 'nullable|string|max:4',
+            'terreno.Temp_Min' => 'nullable|string|max:4',
+            'terreno.Temp_Max' => 'nullable|string|max:4',
+            'terreno.Radiacion' => 'nullable|numeric|min:0',
+            'terreno.Fuente_Agua' => 'nullable|string|max:25',
+            'terreno.Caudal_Disponible' => 'nullable|integer|min:0',
+            'terreno.Riego_Metodo' => 'nullable|string|max:18',
         ]);
 
         if ($validator->fails()) {
@@ -178,7 +214,22 @@ class FincaController extends Controller
         }
 
         $finca->update($request->only(['Nombre', 'Explotacion_Tipo', 'id_Propietario']));
-        $finca->load(['propietario.user']);
+
+        // Update or create terreno if provided
+        if ($request->has('terreno') && $request->terreno) {
+            $terreno = $finca->terreno;
+            if ($terreno) {
+                // Update existing terreno
+                $terreno->update($request->terreno);
+            } else {
+                // Create new terreno
+                $terrenoData = $request->terreno;
+                $terrenoData['id_Finca'] = $finca->id_Finca;
+                Terreno::create($terrenoData);
+            }
+        }
+
+        $finca->load(['propietario.user', 'terreno']);
 
         return response()->json([
             'success' => true,

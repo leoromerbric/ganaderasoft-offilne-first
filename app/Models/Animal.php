@@ -104,6 +104,25 @@ class Animal extends Model
     }
 
     /**
+     * Get the etapa animal records for the animal.
+     */
+    public function etapaAnimales()
+    {
+        return $this->hasMany(EtapaAnimal::class, 'etan_animal_id', 'id_Animal');
+    }
+
+    /**
+     * Get the current active etapa for the animal.
+     */
+    public function etapaActual()
+    {
+        return $this->hasOne(EtapaAnimal::class, 'etan_animal_id', 'id_Animal')
+            ->whereNull('etan_fecha_fin')
+            ->orWhere('etan_fecha_fin', '>', now()->toDateString())
+            ->latest('etan_fecha_ini');
+    }
+
+    /**
      * Scope a query to only include active animals.
      */
     public function scopeActive($query)

@@ -11,6 +11,9 @@ use App\Http\Controllers\Api\InventarioBufaloController;
 use App\Http\Controllers\Api\TipoAnimalController;
 use App\Http\Controllers\Api\EstadoSaludController;
 use App\Http\Controllers\Api\EstadoAnimalController;
+use App\Http\Controllers\Api\ConfiguracionController;
+use App\Http\Controllers\Api\ComposicionRazaController;
+use App\Http\Controllers\Api\EtapaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +50,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tipos-animal', TipoAnimalController::class);
     Route::apiResource('estados-salud', EstadoSaludController::class);
     Route::apiResource('estados-animal', EstadoAnimalController::class);
+    Route::apiResource('composicion-raza', ComposicionRazaController::class);
+    Route::apiResource('etapas', EtapaController::class);
+    
+    // Configuration routes (JSON-based)
+    Route::prefix('configuracion')->group(function () {
+        Route::get('tipo-explotacion', [ConfiguracionController::class, 'tipoExplotacion']);
+        Route::get('metodo-riego', [ConfiguracionController::class, 'metodoRiego']);
+        Route::get('ph-suelo', [ConfiguracionController::class, 'phSuelo']);
+        Route::get('textura-suelo', [ConfiguracionController::class, 'texturaSuelo']);
+        Route::get('fuente-agua', [ConfiguracionController::class, 'fuenteAgua']);
+        Route::get('sexo', [ConfiguracionController::class, 'sexo']);
+    });
+    
+    // Animal relationship management routes
+    Route::prefix('animales/{animal}')->group(function () {
+        Route::post('estado-animal', [AnimalController::class, 'createEstadoAnimal']);
+        Route::put('estado-animal/{estado}', [AnimalController::class, 'updateEstadoAnimal']);
+        Route::post('etapa-animal', [AnimalController::class, 'createEtapaAnimal']);
+        Route::put('etapa-animal/{etapa}', [AnimalController::class, 'updateEtapaAnimal']);
+    });
 });
