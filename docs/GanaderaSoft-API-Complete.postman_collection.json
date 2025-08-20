@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "40334492-12d4-4543-9665-ec909d98a343",
 		"name": "GanaderaSoft API - Complete",
-		"description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## New Endpoints Added\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)\n\n## New Configuration APIs Added\n- Tipo Explotación\n- Método Riego\n- pH Suelo\n- Textura Suelo\n- Fuente de Agua\n- Sexo\n- Tipo Relieve\n- Composición Raza\n- Etapas\n\n## Enhanced Features\n- Animal relationship management (estado_animal, etapa_animal)\n- Finca terreno data support\n- ComposicionRaza API now returns all records without filtering by fk_tipo_animal_id or fk_id_Finca",
+		"description": "API Gateway for GanaderaSoft - Comprehensive Livestock Management System\n\nThis collection contains all the API endpoints for managing users, authentication, fincas (farms), rebaños (herds), animals, inventories, and more.\n\n## Base URL\n`{{base_url}}/api`\n\n## Authentication\nThis API uses Laravel Sanctum for authentication. Most endpoints require a Bearer token in the Authorization header.\n\n## Environment Variables\n- `base_url`: The base URL of your API (e.g., http://localhost:8000)\n- `auth_token`: Bearer token obtained from login/register\n\n## User Types\n- `admin`: Full access to all resources\n- `propietario`: Can manage their own resources\n- `tecnico`: Limited access for technical support\n\n## Main Endpoints\n- Propietarios (Property Owners)\n- Rebaños (Herds)\n- Animales (Animals)\n- Inventarios de Búfalo (Buffalo Inventories)\n- Tipos de Animal (Animal Types)\n\n## Configuration APIs\n- Tipo Explotación\n- Método Riego\n- pH Suelo\n- Textura Suelo\n- Fuente de Agua\n- Sexo\n- Tipo Relieve\n- Composición Raza\n- Etapas\n\n## New Livestock Management APIs\n- Personal Finca (Farm Personnel)\n- Peso Corporal (Body Weight)\n- Lactancia (Lactation Records)\n- Leche (Milk Production)\n- Medidas Corporales (Body Measurements)\n- Cambios Animal (Animal Changes)\n\n## Enhanced Features\n- Animal relationship management (estado_animal, etapa_animal)\n- Finca terreno data support\n- ComposicionRaza API now returns all records without filtering by fk_tipo_animal_id or fk_id_Finca\n- Complete livestock tracking from birth to production",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "3234714"
 	},
@@ -2120,6 +2120,1149 @@
 								"animales",
 								"1",
 								"etapa-animal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👥 Personal Finca",
+			"item": [
+				{
+					"name": "List Personal Finca",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/personal-finca?id_finca=1&tipo_trabajador=Administrador&nombre=Juan",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"personal-finca"
+							],
+							"query": [
+								{
+									"key": "id_finca",
+									"value": "1",
+									"description": "Filter by finca ID"
+								},
+								{
+									"key": "tipo_trabajador",
+									"value": "Administrador",
+									"description": "Filter by worker type"
+								},
+								{
+									"key": "nombre",
+									"value": "Juan",
+									"description": "Search by name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Personal Finca",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_Finca\": 1,\n    \"Cedula\": 12345678,\n    \"Nombre\": \"Juan\",\n    \"Apellido\": \"Pérez\",\n    \"Telefono\": \"3001234567\",\n    \"Correo\": \"juan.perez@email.com\",\n    \"Tipo_Trabajador\": \"Administrador\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/personal-finca",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"personal-finca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Personal Finca",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/personal-finca/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"personal-finca",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Personal Finca",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Telefono\": \"3009876543\",\n    \"Correo\": \"juan.perez.nuevo@email.com\",\n    \"Tipo_Trabajador\": \"Supervisor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/personal-finca/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"personal-finca",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Personal Finca",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/personal-finca/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"personal-finca",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "⚖️ Peso Corporal",
+			"item": [
+				{
+					"name": "List Peso Corporal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/peso-corporal?animal_id=1&fecha_inicio=2023-01-01&fecha_fin=2023-12-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"peso-corporal"
+							],
+							"query": [
+								{
+									"key": "animal_id",
+									"value": "1",
+									"description": "Filter by animal ID"
+								},
+								{
+									"key": "fecha_inicio",
+									"value": "2023-01-01",
+									"description": "Start date filter"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2023-12-31",
+									"description": "End date filter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Peso Corporal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Fecha_Peso\": \"2024-01-15\",\n    \"Peso\": 450.5,\n    \"Comentario\": \"Peso normal para la edad\",\n    \"peso_etapa_anid\": 1,\n    \"peso_etapa_etid\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/peso-corporal",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"peso-corporal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Peso Corporal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/peso-corporal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"peso-corporal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Peso Corporal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Peso\": 455.0,\n    \"Comentario\": \"Incremento de peso saludable\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/peso-corporal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"peso-corporal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Peso Corporal",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/peso-corporal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"peso-corporal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤱 Lactancia",
+			"item": [
+				{
+					"name": "List Lactancias",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/lactancia?animal_id=1&activa=1&fecha_inicio=2023-01-01&fecha_fin=2023-12-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"lactancia"
+							],
+							"query": [
+								{
+									"key": "animal_id",
+									"value": "1",
+									"description": "Filter by animal ID"
+								},
+								{
+									"key": "activa",
+									"value": "1",
+									"description": "Filter active lactations"
+								},
+								{
+									"key": "fecha_inicio",
+									"value": "2023-01-01",
+									"description": "Start date filter"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2023-12-31",
+									"description": "End date filter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Lactancia",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lactancia_fecha_inicio\": \"2024-01-01\",\n    \"Lactancia_fecha_fin\": null,\n    \"lactancia_secado\": null,\n    \"lactancia_etapa_anid\": 1,\n    \"lactancia_etapa_etid\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/lactancia",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"lactancia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lactancia",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/lactancia/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"lactancia",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Lactancia",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Lactancia_fecha_fin\": \"2024-10-01\",\n    \"lactancia_secado\": \"2024-09-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/lactancia/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"lactancia",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Lactancia",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/lactancia/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"lactancia",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🥛 Leche",
+			"item": [
+				{
+					"name": "List Leche Records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/leche?lactancia_id=1&fecha_inicio=2024-01-01&fecha_fin=2024-12-31&produccion_minima=10.0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leche"
+							],
+							"query": [
+								{
+									"key": "lactancia_id",
+									"value": "1",
+									"description": "Filter by lactancia ID"
+								},
+								{
+									"key": "fecha_inicio",
+									"value": "2024-01-01",
+									"description": "Start date filter"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2024-12-31",
+									"description": "End date filter"
+								},
+								{
+									"key": "produccion_minima",
+									"value": "10.0",
+									"description": "Minimum production filter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Leche Record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"leche_fecha_pesaje\": \"2024-01-15\",\n    \"leche_pesaje_Total\": 25.50,\n    \"leche_lactancia_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/leche",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leche"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Leche Record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/leche/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leche",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Leche Record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"leche_pesaje_Total\": 26.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/leche/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leche",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Leche Record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/leche/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leche",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📐 Medidas Corporales",
+			"item": [
+				{
+					"name": "List Medidas Corporales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/medidas-corporales?animal_id=1&etapa_id=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"medidas-corporales"
+							],
+							"query": [
+								{
+									"key": "animal_id",
+									"value": "1",
+									"description": "Filter by animal ID"
+								},
+								{
+									"key": "etapa_id",
+									"value": "2",
+									"description": "Filter by etapa ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Medidas Corporales",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Altura_HC\": 125.5,\n    \"Altura_HG\": 130.2,\n    \"Perimetro_PT\": 180.0,\n    \"Perimetro_PCA\": 65.5,\n    \"Longitud_LC\": 155.0,\n    \"Longitud_LG\": 45.0,\n    \"Anchura_AG\": 35.5,\n    \"medida_etapa_anid\": 1,\n    \"medida_etapa_etid\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/medidas-corporales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"medidas-corporales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Medidas Corporales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/medidas-corporales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"medidas-corporales",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Medidas Corporales",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Altura_HC\": 127.0,\n    \"Altura_HG\": 132.0,\n    \"Perimetro_PT\": 182.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/medidas-corporales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"medidas-corporales",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Medidas Corporales",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/medidas-corporales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"medidas-corporales",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔄 Cambios Animal",
+			"item": [
+				{
+					"name": "List Cambios Animal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/cambios-animal?animal_id=1&etapa_id=2&etapa_cambio=Juvenil&fecha_inicio=2023-01-01&fecha_fin=2023-12-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cambios-animal"
+							],
+							"query": [
+								{
+									"key": "animal_id",
+									"value": "1",
+									"description": "Filter by animal ID"
+								},
+								{
+									"key": "etapa_id",
+									"value": "2",
+									"description": "Filter by etapa ID"
+								},
+								{
+									"key": "etapa_cambio",
+									"value": "Juvenil",
+									"description": "Filter by etapa cambio"
+								},
+								{
+									"key": "fecha_inicio",
+									"value": "2023-01-01",
+									"description": "Start date filter"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2023-12-31",
+									"description": "End date filter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cambios Animal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Fecha_Cambio\": \"2024-01-15\",\n    \"Etapa_Cambio\": \"Juvenil\",\n    \"Peso\": 350.0,\n    \"Altura\": 120.5,\n    \"Comentario\": \"Transición a etapa juvenil con buen desarrollo\",\n    \"cambios_etapa_anid\": 1,\n    \"cambios_etapa_etid\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cambios-animal",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cambios-animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cambios Animal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/cambios-animal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cambios-animal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cambios Animal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Peso\": 355.0,\n    \"Altura\": 122.0,\n    \"Comentario\": \"Buen progreso en el crecimiento\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cambios-animal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cambios-animal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cambios Animal",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/cambios-animal/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cambios-animal",
 								"1"
 							]
 						}
