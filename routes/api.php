@@ -14,6 +14,12 @@ use App\Http\Controllers\Api\EstadoAnimalController;
 use App\Http\Controllers\Api\ConfiguracionController;
 use App\Http\Controllers\Api\ComposicionRazaController;
 use App\Http\Controllers\Api\EtapaController;
+use App\Http\Controllers\Api\PersonalFincaController;
+use App\Http\Controllers\Api\PesoCorporalController;
+use App\Http\Controllers\Api\LactanciaController;
+use App\Http\Controllers\Api\LecheController;
+use App\Http\Controllers\Api\MedidasCorporalesController;
+use App\Http\Controllers\Api\CambiosAnimalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +58,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('estados-animal', EstadoAnimalController::class);
     Route::apiResource('composicion-raza', ComposicionRazaController::class);
     Route::apiResource('etapas', EtapaController::class);
+    
+    // New entity CRUD routes
+    Route::apiResource('personal-finca', PersonalFincaController::class);
+    Route::apiResource('peso-corporal', PesoCorporalController::class);
+    Route::apiResource('lactancia', LactanciaController::class);
+    Route::apiResource('leche', LecheController::class);
+    Route::apiResource('medidas-corporales', MedidasCorporalesController::class);
+    Route::apiResource('cambios-animal', CambiosAnimalController::class);
     
     // Configuration routes (JSON-based)
     Route::prefix('configuracion')->group(function () {
