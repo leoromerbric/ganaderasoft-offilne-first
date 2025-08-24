@@ -10,6 +10,7 @@ class CambiosAnimal extends Model
     use HasFactory;
 
     protected $table = 'cambios_animal';
+
     protected $primaryKey = 'id_Cambio';
 
     protected $fillable = [
@@ -30,12 +31,13 @@ class CambiosAnimal extends Model
 
     /**
      * Get the etapa animal relationship.
-     * Using whereRaw to handle composite keys properly.
+     * Using whereColumn to handle composite keys properly.
      */
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class)
-                    ->whereRaw('etan_animal_id = cambios_etapa_anid AND etan_etapa_id = cambios_etapa_etid');
+            ->whereColumn('etan_animal_id', 'cambios_animal.cambios_etapa_anid')
+            ->whereColumn('etan_etapa_id', 'cambios_animal.cambios_etapa_etid');
     }
 
     /**
@@ -54,6 +56,7 @@ class CambiosAnimal extends Model
         if ($endDate) {
             return $query->whereBetween('Fecha_Cambio', [$startDate, $endDate]);
         }
+
         return $query->where('Fecha_Cambio', '>=', $startDate);
     }
 
