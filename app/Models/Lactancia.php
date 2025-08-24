@@ -28,25 +28,20 @@ class Lactancia extends Model
 
     /**
      * Get the etapa animal relationship.
+     * Using whereRaw to handle composite keys properly.
      */
     public function etapaAnimal()
     {
-        return $this->belongsTo(EtapaAnimal::class, ['lactancia_etapa_anid', 'lactancia_etapa_etid'], ['etan_animal_id', 'etan_etapa_id']);
+        return $this->hasOne(EtapaAnimal::class)
+                    ->whereRaw('etan_animal_id = lactancia_etapa_anid AND etan_etapa_id = lactancia_etapa_etid');
     }
 
     /**
-     * Get the animal through etapa animal.
+     * Get the animal through the direct foreign key.
      */
     public function animal()
     {
-        return $this->hasOneThrough(
-            Animal::class,
-            EtapaAnimal::class,
-            ['etan_animal_id', 'etan_etapa_id'],
-            'id_Animal',
-            ['lactancia_etapa_anid', 'lactancia_etapa_etid'],
-            'etan_animal_id'
-        );
+        return $this->belongsTo(Animal::class, 'lactancia_etapa_anid', 'id_Animal');
     }
 
     /**
