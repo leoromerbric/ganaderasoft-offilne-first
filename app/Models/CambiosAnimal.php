@@ -36,7 +36,7 @@ class CambiosAnimal extends Model
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class, 'etan_animal_id', 'cambios_etapa_anid')
-            ->whereColumn('etan_etapa_id', 'cambios_etapa_etid');
+            ->whereColumn('etan_etapa_id', 'cambios_animal.cambios_etapa_etid');
     }
 
     /**
