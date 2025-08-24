@@ -10,6 +10,7 @@ class PesoCorporal extends Model
     use HasFactory;
 
     protected $table = 'peso_corporal';
+
     protected $primaryKey = 'id_Peso';
 
     protected $fillable = [
@@ -32,8 +33,8 @@ class PesoCorporal extends Model
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class)
-                    ->whereColumn('etan_animal_id', 'peso_corporal.peso_etapa_anid')
-                    ->whereColumn('etan_etapa_id', 'peso_corporal.peso_etapa_etid');
+            ->whereColumn('etan_animal_id', 'peso_corporal.peso_etapa_anid')
+            ->whereColumn('etan_etapa_id', 'peso_corporal.peso_etapa_etid');
     }
 
     /**
@@ -52,6 +53,7 @@ class PesoCorporal extends Model
         if ($endDate) {
             return $query->whereBetween('Fecha_Peso', [$startDate, $endDate]);
         }
+
         return $query->where('Fecha_Peso', '>=', $startDate);
     }
 

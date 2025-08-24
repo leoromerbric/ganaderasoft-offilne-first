@@ -10,6 +10,7 @@ class MedidasCorporales extends Model
     use HasFactory;
 
     protected $table = 'medidas_corporales';
+
     protected $primaryKey = 'id_Medida';
 
     protected $fillable = [
@@ -41,8 +42,8 @@ class MedidasCorporales extends Model
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class)
-                    ->whereColumn('etan_animal_id', 'medidas_corporales.medida_etapa_anid')
-                    ->whereColumn('etan_etapa_id', 'medidas_corporales.medida_etapa_etid');
+            ->whereColumn('etan_animal_id', 'medidas_corporales.medida_etapa_anid')
+            ->whereColumn('etan_etapa_id', 'medidas_corporales.medida_etapa_etid');
     }
 
     /**
