@@ -4,6 +4,12 @@
 /public/hot
 /public/storage
 /storage/*.key
+# Laravel logs
+/storage/logs/*.log
+# Laravel cache & framework generated files
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
 /.env
 /.env.backup
 /.env.production

@@ -30,25 +30,20 @@ class CambiosAnimal extends Model
 
     /**
      * Get the etapa animal relationship.
+     * Using whereRaw to handle composite keys properly.
      */
     public function etapaAnimal()
     {
-        return $this->belongsTo(EtapaAnimal::class, ['cambios_etapa_anid', 'cambios_etapa_etid'], ['etan_animal_id', 'etan_etapa_id']);
+        return $this->hasOne(EtapaAnimal::class)
+                    ->whereRaw('etan_animal_id = cambios_etapa_anid AND etan_etapa_id = cambios_etapa_etid');
     }
 
     /**
-     * Get the animal through etapa animal.
+     * Get the animal through the direct foreign key.
      */
     public function animal()
     {
-        return $this->hasOneThrough(
-            Animal::class,
-            EtapaAnimal::class,
-            ['etan_animal_id', 'etan_etapa_id'],
-            'id_Animal',
-            ['cambios_etapa_anid', 'cambios_etapa_etid'],
-            'etan_animal_id'
-        );
+        return $this->belongsTo(Animal::class, 'cambios_etapa_anid', 'id_Animal');
     }
 
     /**
