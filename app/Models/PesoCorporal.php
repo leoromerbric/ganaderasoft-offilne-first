@@ -33,7 +33,7 @@ class PesoCorporal extends Model
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class, 'etan_animal_id', 'peso_etapa_anid')
-            ->whereColumn('etan_etapa_id', 'peso_etapa_etid');
+            ->whereColumn('etan_etapa_id', 'peso_corporal.peso_etapa_etid');
     }
 
     /**
