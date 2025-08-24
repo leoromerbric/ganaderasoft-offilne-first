@@ -27,12 +27,13 @@ class PesoCorporal extends Model
 
     /**
      * Get the etapa animal relationship.
-     * Using whereRaw to handle composite keys properly.
+     * Using whereColumn to handle composite keys properly.
      */
     public function etapaAnimal()
     {
         return $this->hasOne(EtapaAnimal::class)
-                    ->whereRaw('etan_animal_id = peso_etapa_anid AND etan_etapa_id = peso_etapa_etid');
+                    ->whereColumn('etan_animal_id', 'peso_corporal.peso_etapa_anid')
+                    ->whereColumn('etan_etapa_id', 'peso_corporal.peso_etapa_etid');
     }
 
     /**
