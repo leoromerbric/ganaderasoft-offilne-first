@@ -17,7 +17,8 @@ class PesoCorporalController extends Controller
     {
         $user = $request->user();
         
-        $query = PesoCorporal::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+	$query = PesoCorporal::query();
+	//$query = PesoCorporal::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         // Apply filters
         if ($request->has('animal_id')) {
@@ -113,7 +114,7 @@ class PesoCorporalController extends Controller
         }
 
         $pesoCorporal = PesoCorporal::create($request->all());
-        $pesoCorporal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        //$pesoCorporal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,
@@ -179,13 +180,13 @@ class PesoCorporalController extends Controller
         // Check permissions
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $pesoCorporal->load(['etapaAnimal.animal.rebano.finca']);
+                /*$pesoCorporal->load(['etapaAnimal.animal.rebano.finca']);
                 if ($pesoCorporal->etapaAnimal->animal->rebano->finca->id_Propietario !== $user->propietario->id) {
                     return response()->json([
                         'success' => false,
                         'message' => 'No tiene permisos para editar este peso corporal'
                     ], Response::HTTP_FORBIDDEN);
-                }
+		}*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -209,7 +210,7 @@ class PesoCorporalController extends Controller
         }
 
         $pesoCorporal->update($request->all());
-        $pesoCorporal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        //$pesoCorporal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,

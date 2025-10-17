@@ -17,7 +17,8 @@ class MedidasCorporalesController extends Controller
     {
         $user = $request->user();
         
-        $query = MedidasCorporales::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        $query = MedidasCorporales::query();
+	//$query = MedidasCorporales::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         // Apply filters
         if ($request->has('animal_id')) {
@@ -31,9 +32,9 @@ class MedidasCorporalesController extends Controller
         // If user is not admin, only show medidas from their animals
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
+             /*   $query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
                     $q->where('id_Propietario', $user->propietario->id);
-                });
+	     });*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -116,7 +117,7 @@ class MedidasCorporalesController extends Controller
         }
 
         $medidasCorporales = MedidasCorporales::create($request->all());
-        $medidasCorporales->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        //$medidasCorporales->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,

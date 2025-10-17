@@ -160,13 +160,13 @@ class AnimalController extends Controller
     {
         $animal = Animal::with([
             'rebano.finca.propietario', 
-            'composicionRaza',
-            'pesosCorporales',
-            'registrosCelo',
-            'reproducciones',
-            'servicios',
+//            'composicionRaza',
+//            'pesosCorporales',
+//            'registrosCelo',
+//            'reproducciones',
+//            'servicios',
             'estados.estadoSalud',
-            'estadoActual.estadoSalud',
+//            'estadoActual.estadoSalud',
             'etapaAnimales.etapa',
             'etapaActual.etapa'
         ])->find($id);

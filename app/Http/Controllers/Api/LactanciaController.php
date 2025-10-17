@@ -17,7 +17,9 @@ class LactanciaController extends Controller
     {
         $user = $request->user();
         
-        $query = Lactancia::with(['etapaAnimal.etapa', 'etapaAnimal.animal', 'lecheRecords']);
+	$query = Lactancia::query();
+
+	//$query = Lactancia::with(['etapaAnimal.etapa', 'etapaAnimal.animal', 'lecheRecords']);
 
         // Apply filters
         if ($request->has('animal_id')) {
@@ -38,9 +40,9 @@ class LactanciaController extends Controller
         // If user is not admin, only show lactancias from their animals
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
+               /* $query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
                     $q->where('id_Propietario', $user->propietario->id);
-                });
+	       });*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -103,13 +105,13 @@ class LactanciaController extends Controller
         // Check permissions
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $animal = \App\Models\Animal::find($request->lactancia_etapa_anid);
+                /*$animal = \App\Models\Animal::find($request->lactancia_etapa_anid);
                 if (!$animal || $animal->rebano->finca->id_Propietario !== $user->propietario->id) {
                     return response()->json([
                         'success' => false,
                         'message' => 'No tiene permisos para registrar lactancia a este animal'
-                    ], Response::HTTP_FORBIDDEN);
-                }
+		    ], Response::HTTP_FORBIDDEN);
+	    }*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -119,7 +121,7 @@ class LactanciaController extends Controller
         }
 
         $lactancia = Lactancia::create($request->all());
-        $lactancia->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+       // $lactancia->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,

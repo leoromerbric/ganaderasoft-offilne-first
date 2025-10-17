@@ -17,7 +17,8 @@ class LecheController extends Controller
     {
         $user = $request->user();
         
-        $query = Leche::with(['lactancia.etapaAnimal.animal']);
+	//$query = Leche::with(['lactancia.etapaAnimal.animal']);
+	$query = Leche::query();
 
         // Apply filters
         if ($request->has('lactancia_id')) {
@@ -36,9 +37,9 @@ class LecheController extends Controller
         // If user is not admin, only show leche from their animals
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $query->whereHas('lactancia.etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
+                /*$query->whereHas('lactancia.etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
                     $q->where('id_Propietario', $user->propietario->id);
-                });
+		});*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -94,13 +95,13 @@ class LecheController extends Controller
                     ], Response::HTTP_NOT_FOUND);
                 }
 
-                $lactancia->load(['etapaAnimal.animal.rebano.finca']);
+                /*$lactancia->load(['etapaAnimal.animal.rebano.finca']);
                 if ($lactancia->etapaAnimal->animal->rebano->finca->id_Propietario !== $user->propietario->id) {
                     return response()->json([
                         'success' => false,
                         'message' => 'No tiene permisos para registrar leche a esta lactancia'
                     ], Response::HTTP_FORBIDDEN);
-                }
+		}*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -110,7 +111,7 @@ class LecheController extends Controller
         }
 
         $leche = Leche::create($request->all());
-        $leche->load(['lactancia.etapaAnimal.animal']);
+        //$leche->load(['lactancia.etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,

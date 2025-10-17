@@ -40,7 +40,7 @@ class PersonalFincaController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No tiene permisos para ver esta información'
+                    'message' => 'No tiene permisos para ver esta informacion'
                 ], Response::HTTP_FORBIDDEN);
             }
         }

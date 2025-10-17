@@ -17,8 +17,9 @@ class CambiosAnimalController extends Controller
     {
         $user = $request->user();
         
-        $query = CambiosAnimal::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        //$query = CambiosAnimal::with(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
+	$query = CambiosAnimal::query();
         // Apply filters
         if ($request->has('animal_id')) {
             $query->forAnimal($request->animal_id);
@@ -40,9 +41,9 @@ class CambiosAnimalController extends Controller
         // If user is not admin, only show cambios from their animals
         if (!$user->isAdmin()) {
             if ($user->isPropietario()) {
-                $query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
+                /*$query->whereHas('etapaAnimal.animal.rebano.finca', function ($q) use ($user) {
                     $q->where('id_Propietario', $user->propietario->id);
-                });
+		});*/
             } else {
                 return response()->json([
                     'success' => false,
@@ -123,7 +124,7 @@ class CambiosAnimalController extends Controller
         }
 
         $cambiosAnimal = CambiosAnimal::create($request->all());
-        $cambiosAnimal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
+        //$cambiosAnimal->load(['etapaAnimal.etapa', 'etapaAnimal.animal']);
 
         return response()->json([
             'success' => true,
