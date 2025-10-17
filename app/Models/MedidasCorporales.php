@@ -41,8 +41,7 @@ class MedidasCorporales extends Model
      */
     public function etapaAnimal()
     {
-        return $this->hasOne(EtapaAnimal::class)
-            ->whereColumn('etan_animal_id', 'medidas_corporales.medida_etapa_anid')
+        return $this->hasOne(EtapaAnimal::class, 'etan_animal_id', 'medida_etapa_anid')
             ->whereColumn('etan_etapa_id', 'medidas_corporales.medida_etapa_etid');
     }
 

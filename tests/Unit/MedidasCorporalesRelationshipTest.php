@@ -6,12 +6,9 @@ use Tests\TestCase;
 use App\Models\MedidasCorporales;
 use App\Models\EtapaAnimal;
 use App\Models\Animal;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MedidasCorporalesRelationshipTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_medidas_corporales_can_load_etapa_animal_relationship()
     {
         // Create a medidas corporales instance
@@ -27,6 +24,11 @@ class MedidasCorporalesRelationshipTest extends TestCase
         
         // This should not throw an "Array to string conversion" error
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\HasOne::class, $relation);
+        
+        // Verify the relationship configuration
+        $this->assertEquals(EtapaAnimal::class, $relation->getRelated()::class);
+        $this->assertEquals('etan_animal_id', $relation->getForeignKeyName());
+        $this->assertEquals('medida_etapa_anid', $relation->getLocalKeyName());
     }
 
     public function test_medidas_corporales_can_load_animal_relationship()
@@ -44,5 +46,8 @@ class MedidasCorporalesRelationshipTest extends TestCase
         
         // This should not throw an "Array to string conversion" error
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        
+        // Verify the relationship configuration
+        $this->assertEquals(Animal::class, $relation->getRelated()::class);
     }
 }
